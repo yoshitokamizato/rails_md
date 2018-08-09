@@ -1,0 +1,467 @@
+<p>データベース環境構築</p>
+<p>MySQLとPostgreSQL 大きな違いはないので、好きな方を選べばいい。ただし、現場ではPostgreSQLの方がバグが少ないという理由で使用されている。</p>
+<p>PostgreSQLの環境構築 postgresqlのインストール brew install postgresql</p>
+<p>encodingをUTF8、localeをja_JPで初期化 initdb –encoding=UTF-8 –locale=ja_JP.UTF-8 /usr/local/var/postgres</p>
+<p>postgresを起動 postgres -D /usr/local/var/postgres ※postgres -D <datadir>で起動</p>
+<p>Git Gitは、プログラムのソースコードなどの変更履歴を記録・追跡するためのバージョン管理システムです。バージョン管理とは、その名の通り、複数存在するソースコードのバージョンを管理するためのものです。そのバージョン管理を楽にしてくれるのがGitで、これを使用することによって変更履歴をさかのぼってソースコードを元の状態に戻す事ができたり、複数人での共同開発も可能になります。チームでの共同開発をする上で、もはやGitは欠かせない存在となっています。プログラマーというとコードを書いているイメージがあるかと思いますが、それ以前にGitなどのバージョン管理ツールが無ければ仕事になりません。ぜひ、ここで基礎を押さえておきましょう。</p>
+<p>Gitにおける開発の流れ まずは基本的な用語から押さえておきましょう。Gitがバージョン管理下におく場所を「リポジトリ」と言います。リポジトリには「ローカルリポジトリ」と「リモートリポジトリ」があり、ローカルリポジトリは自分のパソコン内にあるリポジトリ、リモートリポジトリはネット上にあるリポジトリと覚えておきましょう。リモートリポジトリに関しては、後ほど詳しくご説明いたします。 ユーザが変更の履歴を保存することをコミット（commit）と言います。これはGitの持つ機能の中でも特によく使用するのでぜひ覚えておいてください。コミットは実行した順番で記録されるので、時系列に沿って変更履歴を追う事ができます。そのため、過去にどういう変更を行ったのかを簡単に確認する事ができるのです。また、コミットをする際にはコミットメッセージという形でメモを残す事ができます。例えば、「デザインの変更をしました」とか「データベースへの登録処理を追加しました」といったメモを残す事ができるというわけです。それによって、より変更履歴の理解が容易になります。</p>
+<p>複数人での開発を行う際は、この「コミット」と「コミットメッセージ」を利用し、誰がみても理解できるような変更履歴を作成し、任意の履歴に遡ることができるよう心がけましょう。</p>
+<p>同時並行で複数の開発を可能にする機能 Gitには、複数の開発を同時並行することができる機能があります。例えば、Aさんはデータの登録を行う処理を実装し、Bさんはデータの表示形式を綺麗にするという実装をするとします。そのとき、2人で同じファイルを編集することになるととても効率が悪くなります。それを解決するための機能が「ブランチ」です。ブランチとは、文字通り開発を枝分かれさせる機能のことで、これを使用することによってAさんとBさんの開発を別々のものとして扱うことができます。</p>
+<p>例） Aさん　→ ブランチA Bさん　→ ブランチB</p>
+<p>ローカルリポジトリとリモートリポジトリ 前述でGitのバージョン管理下にある場所をリポジトリというというお話をしました。その中でも、ネットを介してどこからでも利用できるようにしたリポジトリのことをリモートリポジトリと言います。それとは逆に、自分のパソコン内にあるリポジトリのことろローカルリポジトリと言います。複数人での開発を行うときは、リモートリポジトリを複数のプログラマーで共有し、そのリモートリポジトリのクローンをそれぞれのプログラマーがローカルリポジトリにコピーして開発を行うというスタイルになります。これによって、１つのプロジェクトを複数人で開発することが可能になるわけです。</p>
+<p>SourceTree 通常、GitはターミナルやコマンドプロンプトなどのCUIで操作をするものです。つまり、コマンドだけを打ってバージョン管理を行うということですね。しかし、それだと初心者の方にはハードルが高い。というわけで、視覚的にGitを操作できるようにしたのがSourceTreeというツールです。こちらを使用すれば、初心者の方でも簡単にGitでのバージョン管理を行えるようになります。ちなみに、SourceTreeのようにグラフィックが充実していて視覚的に操作できる画面のことをGUIと言います。今回は、このSourceTreeを利用してGitを操作し、バージョン管理の方法を練習していきましょう。</p>
+<p>ローカルリポジトリを作る</p>
+<p>コミットする</p>
+<p>ブランチを作成する</p>
+<p>ブランチをマージする</p>
+<p>メソッド</p>
+<p>next 繰り返し処理の中で「next」が実行されるとブロック内の「next」以降の処理が行われずに次の繰り返しへ進む</p>
+<p>Rubyのクラス 組込ライブラリ Array clear 要素をすべて削除し、配列を空にする。レシーバ自身を変更するメソッド。戻り値はレシーバ自身。</p>
+<pre><code>fruits = [&quot;apple&quot;, &quot;orange&quot;, &quot;banana&quot;]
+fruits.clear
+p fruits
+Enumerator
+next
+「次」のオブジェクトを返す。
+str = &quot;xyz&quot;
+enum = str.each_byte
+
+str.bytesize.times do
+  puts enum.next
+end
+# =&gt; 120
+#    121
+#    122</code></pre>
+<p>File join File::SEPARATORを間に入れて文字列を連結</p>
+<pre><code>File.join(Rails.root, hoge_path, hoge_path, hoge.hoge)
+# =&gt; root_path/hoge_path/hoge.hoge</code></pre>
+<p>ファイルフォーマットライブラリ CSV::Row field ヘッダの名前かインデックスで値を取得。見つからなかった場合はnilを返す。第一引数にヘッダの名前かindex番号を指定する。第二引数にindexを指定し、その番号より後ろにあるヘッダを探す。 row.field(‘field_name’) row.field(‘field_name’, 3)</p>
+<p>Railsのクラス https://github.com/rails/rails actioncable actionmailer actionpack actionview activejob activemodel activerecord activestorage activesupport</p>
+<p>Active Record delete_all テーブルのレコードを全て削除。関連テーブルの削除は行わない create createを実行すると新しいオブジェクトが返され、さらにデータベースに保存される</p>
+<p>import createやsaveよりも効率的にデータを大量投入する事ができる バリデーション抜きでデータを投入する事ができる</p>
+<p>使用例 Model.import array_of_models Model.import column_names, array_of_models Model.import array_of_hash_objects Model.import column_names, array_of_hash_objects Model.import column_names, array_of_values Model.import column_names, array_of_values, options</p>
+<p>module moduleとは、オブジェクトを生成することはできないがメソッドを格納できるもの モジュールは多重継承を行うことができる Rubyではクラスを多重継承することができないためモジュールでそれを補う モジュールの中で定義したメソッドには以下のような使い方がある 定義したメソッドを直接実行する クラスの中にインクルードしてメソッドを実行する</p>
+<p>クラスにモジュールをインクルードする場合の手順は以下のようになる app/libにモジュールファイルを作成 ファイルの命名規則 ファイル名は小文字 単語の区切りは_ モジュール名はキャメルケース モジュールの定義をする</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">module</span> モジュール名</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw">end</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># classのなかにincludeを記述する</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">class</span> hoge</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">  include huga</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="kw">end</span></a></code></pre></div>
+<h2 id="rake-task">rake task</h2>
+<p>rakeとは、Rubyで書かれたコードをタスクとして作成しておき必要に応じて呼び出して実行することができる機能 rake taskを実行するとデータベースへのデータの大量投入も楽になります。</p>
+<p>rakeタスクファイルを生成する</p>
+<pre><code>rails g task task_name</code></pre>
+<p>lib/taskに以下のファイルが作成される</p>
+<pre><code>task_name.rake</code></pre>
+<p>中身は以下のようになっている</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb7-1" data-line-number="1">namespace <span class="st">:task_name</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">end</span></a></code></pre></div>
+<p>中に処理を追加する</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb8-1" data-line-number="1">task <span class="st">:processing_name</span> =&gt; <span class="st">:environment</span> <span class="kw">do</span> |task|</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">    <span class="co"># rake &#39;task_name:processing_name&#39;</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">    行いたい処理を追記</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="kw">end</span></a></code></pre></div>
+<p>rakeタスクの確認をする</p>
+<pre><code>rake -vT</code></pre>
+<p>表示されたタスクを確認し実行する</p>
+<h2 id="csvでのデータの大量投入">CSVでのデータの大量投入</h2>
+<p>開発の現場では大量のデータを取り扱うため、ExcelでCSVデータを作成し、それをデータベースに一気に投入するという方法がよく使用されています。汎用性の高い技術なので、ぜひ自分で実装できるようにしましょう。</p>
+<p>新規に以下の名前のアプリを作成しましょう。</p>
+<pre><code>rails new csv_data</code></pre>
+<p>次に、データ投入のコードを記述するためのmodelを作成します。</p>
+<pre><code>rails g model data_test</code></pre>
+<p>modelと同時に作成されたマイグレーションファイルを、以下のように編集しましょう。今回は、name,age,addressの３つカラムを作成し、データ投入を行います。そのため、nameをstring、ageをinteger、addressをstringで作成します。</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">class</span> <span class="dt">CreateDataTests</span> &lt; <span class="dt">ActiveRecord</span>::<span class="dt">Migration</span>[<span class="fl">5.2</span>]</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">  <span class="kw">def</span> change</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">    create_table <span class="st">:data_tests</span> <span class="kw">do</span> |t|</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4">      t.string <span class="st">:name</span></a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">      t.integer <span class="st">:age</span></a>
+<a class="sourceLine" id="cb12-6" data-line-number="6">      t.string <span class="st">:address</span></a>
+<a class="sourceLine" id="cb12-7" data-line-number="7">      t.timestamps</a>
+<a class="sourceLine" id="cb12-8" data-line-number="8">    <span class="kw">end</span></a>
+<a class="sourceLine" id="cb12-9" data-line-number="9">  <span class="kw">end</span></a>
+<a class="sourceLine" id="cb12-10" data-line-number="10"><span class="kw">end</span></a></code></pre></div>
+<p>マイグレーションファイルを実行し、データベースにテーブルを作成します。</p>
+<pre><code>bundle exec rake db:migrate</code></pre>
+<p>models/application_record.rbにCSVデータをインポートするためのコードを追記します。</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co"># この記述がないとNameError: uninitialized constant DataTest::CSVがでる</span></a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">require <span class="st">&#39;csv&#39;</span></a>
+<a class="sourceLine" id="cb14-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">models/data_test.rbに以下を追記</a>
+<a class="sourceLine" id="cb14-5" data-line-number="5"><span class="kw">def</span> <span class="dv">self</span>.import(path)</a>
+<a class="sourceLine" id="cb14-6" data-line-number="6">   <span class="dt">CSV</span>.foreach(path, <span class="st">headers: </span><span class="dv">true</span>) <span class="kw">do</span> |row|</a>
+<a class="sourceLine" id="cb14-7" data-line-number="7">     <span class="dv">self</span>.find_or_create_by(</a>
+<a class="sourceLine" id="cb14-8" data-line-number="8">       <span class="st">name: </span>row[<span class="st">&quot;name&quot;</span>],</a>
+<a class="sourceLine" id="cb14-9" data-line-number="9">       <span class="st">kana: </span>row[<span class="st">&quot;age&quot;</span>],</a>
+<a class="sourceLine" id="cb14-10" data-line-number="10">       <span class="st">address: </span>row[<span class="st">&quot;address&quot;</span>]</a>
+<a class="sourceLine" id="cb14-11" data-line-number="11">     )</a>
+<a class="sourceLine" id="cb14-12" data-line-number="12">   <span class="kw">end</span></a>
+<a class="sourceLine" id="cb14-13" data-line-number="13"><span class="kw">end</span></a></code></pre></div>
+<p>次に、データを投入するためのCSVファイルを保管するディレクトリを作成しましょう。dbディレクトリの中にcsv_dataディレクトリを作成し、その中にCSVファイル（名前：csv_data.csv）を用意します。CSVファイルは初回配布データからコピー&amp;ペーストで配置しましょう。CSVファイルには以下のような記述がされています。</p>
+<pre><code>name,age,address
+hogehoge1,hogehoge1,hogehoge1
+hogehoge2,hogehoge2,hogehoge2
+hogehoge3,hogehoge3,hogehoge3
+hogehoge4,hogehoge4,hogehoge4
+hogehoge5,hogehoge5,hogehoge5</code></pre>
+<p>以下のコマンドでコンソールを立ち上げる</p>
+<pre><code>rails c</code></pre>
+<p>以下のコマンドを実行</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="dt">DataTest</span>.import(<span class="st">&#39;db/csv_data/csv_data.csv&#39;</span>)</a></code></pre></div>
+<h2 id="ajaxの導入">Ajaxの導入</h2>
+<p>Ajaxとは「Asynchronous JavaScript ＋ XML」の略で、JavaScriptとXMLを使って非同期にサーバとの間の通信を行う方法(非同期通信)のことです。非同期通信とは、画面の一部だけを更新するような通信で、画面全体を更新することなく、一部だけをユーザのリクエストに応じて変化させることができます。非同期通信ではレスポンスを待っている間も他の操作を行うことができるので、ユーザーのストレスを大幅に軽減することができます。</p>
+<p>今回作成するサンプル 今回は、人の名前をAjax通信でデータベースに登録し、一覧表示させるというシンプルなアプリを作成します。このサンプルを通して、Ajax通信でのデータ登録機能を実装する方法を覚えましょう。余裕がある人は削除機能の実装にもチャレンジしてみてください。</p>
+<p>新規に以下の名前のアプリを作成しましょう。</p>
+<pre><code>rails new ajax_sample</code></pre>
+<p>ajax_sampleのディレクトリに移動します。</p>
+<pre><code>cd ajax_sample</code></pre>
+<p>ajax_sampleのデータベースを作成します。</p>
+<pre><code>bundle exec rake db:create</code></pre>
+<p>サーバを起動し、正常に初期画面が表示されるか確認しましょう。</p>
+<pre><code>rails s</code></pre>
+<p>次に、データの投入対象となるusersテーブルに紐づくmodelを作成します。</p>
+<pre><code>rails g model user</code></pre>
+<p>modelと同時に作成されたマイグレーションファイルを、以下のように編集しましょう。今回は、nameカラムを作成し、Ajax通信を利用してデータを登録します。</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw">class</span> <span class="dt">CreateUsers</span> &lt; <span class="dt">ActiveRecord</span>::<span class="dt">Migration</span>[<span class="fl">5.2</span>]</a>
+<a class="sourceLine" id="cb23-2" data-line-number="2">  <span class="kw">def</span> change</a>
+<a class="sourceLine" id="cb23-3" data-line-number="3">    create_table <span class="st">:data_tests</span> <span class="kw">do</span> |t|</a>
+<a class="sourceLine" id="cb23-4" data-line-number="4">      t.string <span class="st">:name</span></a>
+<a class="sourceLine" id="cb23-5" data-line-number="5">      t.timestamps</a>
+<a class="sourceLine" id="cb23-6" data-line-number="6">    <span class="kw">end</span></a>
+<a class="sourceLine" id="cb23-7" data-line-number="7">  <span class="kw">end</span></a>
+<a class="sourceLine" id="cb23-8" data-line-number="8"><span class="kw">end</span></a></code></pre></div>
+<p>マイグレーションファイルを実行し、データベースにusersテーブルを作成しましょう。</p>
+<pre><code>bundle exec rake db:migrate</code></pre>
+<p>今回はAjax通信をRailsに導入するため、jQueryを導入します。従って、Gemファイルに以下のコードを追記しましょう。</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb25-1" data-line-number="1">gem <span class="st">&#39;rails-ujs&#39;</span></a>
+<a class="sourceLine" id="cb25-2" data-line-number="2">gem <span class="st">&#39;jquery-rails&#39;</span></a></code></pre></div>
+<p>追記したGemをインストールします。</p>
+<pre><code>bundle install</code></pre>
+<p>読み込み対象となるJSファイルのjqueryを指定するため、application.jsに以下の内容を追記します。</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode js"><code class="sourceCode javascript"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="co">//= require jquery</span></a></code></pre></div>
+<p>routes.rbに以下のルートを記述します。今回は、getでもpostでも同じアクションが指定されるようにしています。その理由は、Ajax通信（非同期通信）を行うため、ページを遷移する必要がなくpost通信でリクエストされた場合でもindex.html.erbのみを表示するためです。</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb28-1" data-line-number="1">root <span class="st">to: &#39;users#index&#39;</span></a>
+<a class="sourceLine" id="cb28-2" data-line-number="2">get <span class="st">&#39;/users&#39;</span>, <span class="st">to: &#39;users#index&#39;</span></a>
+<a class="sourceLine" id="cb28-3" data-line-number="3">post <span class="st">&#39;/users&#39;</span>, <span class="st">to: &#39;users#index&#39;</span></a></code></pre></div>
+<p>ルートでusersコントローラを指定したので、usersコントローラを作成します。以下のコマンドを実行しましょう。</p>
+<pre><code>rails g controller users index</code></pre>
+<p>usersコントローラにindexアクションを追記し、その中に以下の処理を記述しましょう。</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="kw">def</span> index</a>
+<a class="sourceLine" id="cb30-2" data-line-number="2">    <span class="ot">@users</span> = <span class="dt">User</span>.all</a>
+<a class="sourceLine" id="cb30-3" data-line-number="3"><span class="kw">end</span></a></code></pre></div>
+<p>まずはuserを一覧表示するための画面を作成しましょう</p>
+<pre><code>&lt;h1&gt;User一覧&lt;/h1&gt;
+&lt;% @users.each do |user| %&gt;
+  &lt;p&gt;お名前　&lt;%= user.name %&gt;&lt;/p&gt;
+&lt;% end %&gt;</code></pre>
+<p>次に、投稿フォームを作成するための準備をします。先ほど編集したindex.html.erbにコードを追記しましょう。</p>
+<pre><code>&lt;%= link_to &quot;ユーザ登録&quot;, users_new_path, remote: true %&gt;
+&lt;div id=&quot;users-form&quot;&gt;&lt;/div&gt;
+&lt;div id=&quot;users_index&quot;&gt;
+  &lt;%= render &#39;index&#39; %&gt;
+&lt;/div&gt;</code></pre>
+<p>今回は、index.html.erbで部分テンプレートを指定していますので、対応するファイルを作成します。usersディレクトリに_index.html.erbを作成し、以下のコードを記述しましょう。</p>
+<pre><code>&lt;h1&gt;User一覧&lt;/h1&gt;
+&lt;% @users.each do |user| %&gt;
+  &lt;p&gt;お名前　&lt;%= user.name %&gt;&lt;/p&gt;
+&lt;% end %&gt;</code></pre>
+<p>次に、新規登録画面に遷移するルートを設定しましょう。</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb34-1" data-line-number="1">root <span class="st">to: &#39;users#index&#39;</span></a>
+<a class="sourceLine" id="cb34-2" data-line-number="2">get <span class="st">&#39;/users&#39;</span>, <span class="st">to: &#39;users#index&#39;</span></a>
+<a class="sourceLine" id="cb34-3" data-line-number="3">get <span class="st">&#39;/users/new&#39;</span>, <span class="st">to: &#39;users#new&#39;</span></a></code></pre></div>
+<p>新規登録フォームのroutesで指定されたコントローラのアクションはnewです。そのため、コントローラに以下のアクションを追記しましょう。</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="kw">def</span> new</a>
+<a class="sourceLine" id="cb35-2" data-line-number="2">  <span class="ot">@user</span> = <span class="dt">User</span>.new</a>
+<a class="sourceLine" id="cb35-3" data-line-number="3">  respond_to <span class="kw">do</span> |format|</a>
+<a class="sourceLine" id="cb35-4" data-line-number="4">    format.html</a>
+<a class="sourceLine" id="cb35-5" data-line-number="5">    format.js</a>
+<a class="sourceLine" id="cb35-6" data-line-number="6">  <span class="kw">end</span></a>
+<a class="sourceLine" id="cb35-7" data-line-number="7"><span class="kw">end</span></a></code></pre></div>
+<p>新規登録フォームを表示させるためのjsファイルを作成します。コントローラのnewアクションが実行された時に実行されるjsファイルを作成したいので、usersディレクトリにnew.js.htmlを作成します。そのファイルに以下のコードを記述しましょう。</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb36-1" data-line-number="1">$(<span class="st">&#39;#users-form&#39;</span>).html(<span class="st">&quot;&lt;%= j (render &#39;form&#39;) %&gt;&quot;</span>);</a>
+<a class="sourceLine" id="cb36-2" data-line-number="2">$(<span class="st">&#39;#users-form&#39;</span>).fadeIn(<span class="dv">800</span>);</a></code></pre></div>
+「render ‘form’」で表示させるためのファイルを作成しましょう。名前は「<em>form.html.erb」です。</em>(アンダースコア)を入れることによって部分テンプレートとして機能し、jsファイルが実行されたタイミングで_form.html.erbが「
+<div id="users-form">
+
+</div>
+<p>」の部分に表示されるようになります。</p>
+<pre><code>&lt;%= form_for @user, method: :post, remote: true do |f| %&gt;
+  &lt;%= f.label &quot;名前&quot; %&gt;
+  &lt;%= f.text_field :name %&gt;
+  &lt;%= f.submit %&gt;
+&lt;% end %&gt;</code></pre>
+<p>次に、フォームへデータを入力後のデータベースへの登録処理を実装しましょう。まずはroutesから定義します。</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb38-1" data-line-number="1">root <span class="st">to: &#39;users#index&#39;</span></a>
+<a class="sourceLine" id="cb38-2" data-line-number="2">get <span class="st">&#39;/users&#39;</span>, <span class="st">to: &#39;users#index&#39;</span></a>
+<a class="sourceLine" id="cb38-3" data-line-number="3">get <span class="st">&#39;/users/new&#39;</span>, <span class="st">to: &#39;users#new&#39;</span></a>
+<a class="sourceLine" id="cb38-4" data-line-number="4">post <span class="st">&#39;/users&#39;</span>, <span class="st">to: &#39;users#create&#39;</span></a></code></pre></div>
+<p>今回指定するcontrollerのアクションはcreateなので、controllerにcreateアクションを定義しましょう。アクション内に書いてあるrespond_toの部分は、「ユーザーがhtmlをリクエストしているならhtmlを表示し、jsをリクエストしているならjsファイルを実行する」という意味になります</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb39-1" data-line-number="1">  <span class="kw">def</span> create</a>
+<a class="sourceLine" id="cb39-2" data-line-number="2">    <span class="ot">@users</span> = <span class="dt">User</span>.all</a>
+<a class="sourceLine" id="cb39-3" data-line-number="3">    <span class="ot">@user</span> = <span class="dt">User</span>.new(users_params)</a>
+<a class="sourceLine" id="cb39-4" data-line-number="4">    respond_to <span class="kw">do</span> |format|</a>
+<a class="sourceLine" id="cb39-5" data-line-number="5">      <span class="kw">if</span> <span class="ot">@user</span>.save</a>
+<a class="sourceLine" id="cb39-6" data-line-number="6">        format.html</a>
+<a class="sourceLine" id="cb39-7" data-line-number="7">        format.js</a>
+<a class="sourceLine" id="cb39-8" data-line-number="8">      <span class="kw">else</span></a>
+<a class="sourceLine" id="cb39-9" data-line-number="9">        <span class="ot">@message</span> = <span class="ot">@user</span>.errors.full_messages</a>
+<a class="sourceLine" id="cb39-10" data-line-number="10">        format.js</a>
+<a class="sourceLine" id="cb39-11" data-line-number="11">      <span class="kw">end</span></a>
+<a class="sourceLine" id="cb39-12" data-line-number="12">    <span class="kw">end</span></a>
+<a class="sourceLine" id="cb39-13" data-line-number="13">  <span class="kw">end</span></a></code></pre></div>
+<p>次にcreate.js.erbファイルを作成し、以下のコードを記述しましょう。</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb40-1" data-line-number="1">$(<span class="st">&#39;#users_index&#39;</span>).html(<span class="st">&quot;&lt;%= j (render &#39;index&#39;) %&gt;&quot;</span>);</a>
+<a class="sourceLine" id="cb40-2" data-line-number="2">$(<span class="st">&#39;#users-form&#39;</span>).fadeOut(<span class="dv">600</span>);</a></code></pre></div>
+<p>このコードにより、users_indexのタグがある場所に_index.html.erbの部分テンプレートを表示させ、users-formのタグがある場所を非表示にすることができます。</p>
+<h2 id="simple_formの導入">simple_formの導入</h2>
+<p>form_tagやform_forのようにフォームを作成するためのヘルパーメソッド モデルオブジェクトに対応したフォームを作成することができるため、データベースへのデータ投入も行いやすい</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb41-1" data-line-number="1">gem <span class="st">&#39;simple_form&#39;</span></a>
+<a class="sourceLine" id="cb41-2" data-line-number="2">bundle install</a></code></pre></div>
+<p>simple_formでの登録</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb42-1" data-line-number="1">&lt;%= simple_form_for <span class="ot">@users</span>, <span class="st">:url</span> =&gt; {<span class="st">:action</span> =&gt; <span class="st">:create</span>} <span class="kw">do</span> |f|<span class="ot"> %&gt;</span></a>
+<a class="sourceLine" id="cb42-2" data-line-number="2"><span class="st">    &lt;!-- プログラミングチェックボックス --</span><span class="ot">&gt;</span></a>
+<a class="sourceLine" id="cb42-3" data-line-number="3">    &lt;%= f.collection_check_boxes <span class="st">:programming</span>, [[<span class="st">&quot;Java&quot;</span>, <span class="st">&quot;Java&quot;</span>],[<span class="st">&quot;Ruby&quot;</span>, <span class="st">&quot;Ruby&quot;</span>],[<span class="st">&quot;PHP&quot;</span>, <span class="st">&quot;PHP&quot;</span>],[<span class="st">&quot;Python&quot;</span>, <span class="st">&quot;Python&quot;</span>]], <span class="st">:first</span>, <span class="st">:last</span> %&gt;</a>
+<a class="sourceLine" id="cb42-4" data-line-number="4">          &lt;%= f.button <span class="st">:submit</span>, <span class="st">&quot;Sign UP！&quot;, :class=&gt;&quot;</span>btn btn-primary btn-lg center-block<span class="st">&quot; %&gt;</span></a>
+<a class="sourceLine" id="cb42-5" data-line-number="5"><span class="st">&lt;% end %&gt;</span></a></code></pre></div>
+<p>strong parameter で配列を許可</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="kw">def</span> users_params</a>
+<a class="sourceLine" id="cb43-2" data-line-number="2">　　params.require(<span class="st">:user</span>).permit(<span class="st">:programming</span> =&gt; [])</a>
+<a class="sourceLine" id="cb43-3" data-line-number="3"><span class="kw">end</span></a></code></pre></div>
+<p>カラムのデータ型を配列が登録できるように変更</p>
+<pre><code>rails g migration change_datatype_programming_of_users</code></pre>
+<p>migration ファイルの中身を編集</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="kw">class</span> <span class="dt">ChangeDatatypeProgrammingOfUsers</span> &lt; <span class="dt">ActiveRecord</span>::<span class="dt">Migration</span></a>
+<a class="sourceLine" id="cb45-2" data-line-number="2">  <span class="kw">def</span> change</a>
+<a class="sourceLine" id="cb45-3" data-line-number="3">    change_column <span class="st">:users</span>, <span class="st">:programming</span>, <span class="st">:text</span>, <span class="st">array: </span><span class="dv">true</span></a>
+<a class="sourceLine" id="cb45-4" data-line-number="4">  <span class="kw">end</span></a>
+<a class="sourceLine" id="cb45-5" data-line-number="5"><span class="kw">end</span></a></code></pre></div>
+<p>Herokuにアップロードするときは以下のやり方じゃないとエラーになる</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb46-1" data-line-number="1"><span class="kw">class</span> <span class="dt">ChangeDatatypeProgrammingOfUsers</span> &lt; <span class="dt">ActiveRecord</span>::<span class="dt">Migration</span></a>
+<a class="sourceLine" id="cb46-2" data-line-number="2">    <span class="kw">def</span> change</a>
+<a class="sourceLine" id="cb46-3" data-line-number="3">        change_column <span class="st">:users</span>, <span class="st">:programming</span>, <span class="st">&#39;text USING CAST(programming AS text[])&#39;</span></a>
+<a class="sourceLine" id="cb46-4" data-line-number="4">    <span class="kw">end</span></a>
+<a class="sourceLine" id="cb46-5" data-line-number="5"><span class="kw">end</span></a></code></pre></div>
+<p>マイグレーションを実行する</p>
+<pre><code>bundle exec rake db:migrate</code></pre>
+<p>model でのカラムの serialize 化</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb48-1" data-line-number="1">serialize <span class="st">:programming</span></a></code></pre></div>
+<p>コントローラでレコードを全件取得</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb49-1" data-line-number="1"><span class="kw">def</span> index</a>
+<a class="sourceLine" id="cb49-2" data-line-number="2">    <span class="ot">@users</span> = <span class="dt">User</span>.all</a>
+<a class="sourceLine" id="cb49-3" data-line-number="3"><span class="kw">end</span></a></code></pre></div>
+<p>取り出した配列を view で配列のメソッドを使用して表示</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb50-1" data-line-number="1"><span class="ot">@user</span>.programming.delete_if(&amp;<span class="st">:empty?</span>).join(<span class="st">&quot;, &quot;</span>)</a></code></pre></div>
+<p>Rakeタスク アプリケーションを起動せずに行いたい処理をCUIから実行できます。CSVデータのインポートをする際にこの機能がよく利用されます。 ※puts の色をわかりやすくするために gem ‘colorize’ を導入しています</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb51-1" data-line-number="1"><span class="co"># namespace_name, task_nameには任意の名前を入力してください。</span></a>
+<a class="sourceLine" id="cb51-2" data-line-number="2">namespace :(namespace_name) <span class="kw">do</span></a>
+<a class="sourceLine" id="cb51-3" data-line-number="3">    task (task_name): <span class="st">:environment</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb51-4" data-line-number="4">    <span class="kw">end</span></a>
+<a class="sourceLine" id="cb51-5" data-line-number="5"><span class="kw">end</span></a></code></pre></div>
+<p>namespaceは名前空間と呼ばれるもので、これを利用することによってタスクをグループ分けする事ができるようになります。</p>
+<p>実行するときは、ターミナルから以下のようにコマンドを入力します。</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb52-1" data-line-number="1">rake namespace_name<span class="st">:task_name</span></a></code></pre></div>
+<p>では、実際にtaskを定義する事ができるか確かめてみましょう CSVデータ投入用タスクのサンプルコード</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb53-1" data-line-number="1">require <span class="st">&#39;csv&#39;</span></a>
+<a class="sourceLine" id="cb53-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb53-3" data-line-number="3">namespace <span class="st">:import</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb53-4" data-line-number="4">  desc <span class="st">&quot;Import useers from csv&quot;</span></a>
+<a class="sourceLine" id="cb53-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb53-6" data-line-number="6">  task <span class="st">users: :environment</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb53-7" data-line-number="7">    path = <span class="dt">File</span>.join <span class="dt">Rails</span>.root, <span class="st">&quot;db/csv/csv_data.csv&quot;</span></a>
+<a class="sourceLine" id="cb53-8" data-line-number="8">    puts <span class="st">&quot;path: </span><span class="ot">#{</span>path<span class="ot">}</span><span class="st">&quot;</span>.red</a>
+<a class="sourceLine" id="cb53-9" data-line-number="9">    list = []</a>
+<a class="sourceLine" id="cb53-10" data-line-number="10">    <span class="dt">CSV</span>.foreach(path, <span class="st">headers: </span><span class="dv">true</span>) <span class="kw">do</span> |row|</a>
+<a class="sourceLine" id="cb53-11" data-line-number="11">      list &lt;&lt; {</a>
+<a class="sourceLine" id="cb53-12" data-line-number="12">          <span class="st">name: </span>row[<span class="st">&quot;name&quot;</span>],</a>
+<a class="sourceLine" id="cb53-13" data-line-number="13">          <span class="st">age: </span>row[<span class="st">&quot;age&quot;</span>],</a>
+<a class="sourceLine" id="cb53-14" data-line-number="14">          <span class="st">address: </span>row[<span class="st">&quot;address&quot;</span>],</a>
+<a class="sourceLine" id="cb53-15" data-line-number="15">          <span class="st">gender: </span>row[<span class="st">&quot;gender&quot;</span>],</a>
+<a class="sourceLine" id="cb53-16" data-line-number="16">          <span class="st">program: </span>row[<span class="st">&quot;program&quot;</span>],</a>
+<a class="sourceLine" id="cb53-17" data-line-number="17">          <span class="st">skils: </span>row[<span class="st">&quot;skils&quot;</span>],</a>
+<a class="sourceLine" id="cb53-18" data-line-number="18">      }</a>
+<a class="sourceLine" id="cb53-19" data-line-number="19">    <span class="kw">end</span></a>
+<a class="sourceLine" id="cb53-20" data-line-number="20">    puts <span class="st">&quot;start to create users data&quot;</span>.red</a>
+<a class="sourceLine" id="cb53-21" data-line-number="21">    <span class="kw">begin</span></a>
+<a class="sourceLine" id="cb53-22" data-line-number="22">      <span class="dt">User</span>.create!(list)</a>
+<a class="sourceLine" id="cb53-23" data-line-number="23">      puts <span class="st">&quot;completed!!&quot;</span>.green</a>
+<a class="sourceLine" id="cb53-24" data-line-number="24">    <span class="kw">rescue</span></a>
+<a class="sourceLine" id="cb53-25" data-line-number="25">      puts <span class="st">&quot;raised error&quot;</span>.red</a>
+<a class="sourceLine" id="cb53-26" data-line-number="26">    <span class="kw">end</span></a>
+<a class="sourceLine" id="cb53-27" data-line-number="27">  <span class="kw">end</span></a>
+<a class="sourceLine" id="cb53-28" data-line-number="28"><span class="kw">end</span></a></code></pre></div>
+<h2 id="gem">gem</h2>
+<p>gemとは、Ruby用のパッケージ管理ツールです。このgemのおかげで、Ruby用ライブラリのインストール、アンインストールなどを簡単に管理することができます。</p>
+<p>sitemap_generator</p>
+<p>以下のgemを追加 gem ‘sitemap_generator’</p>
+<p>sitemap.rbを作成 gem install sitemap_generator</p>
+<p>用途に合わせて以下のいずれかのコマンドを実行 rake sitemap:create =&gt; sitemapの作成を行いたい時 rake sitemap:refresh =&gt; sitemapを作成してサーチエンジンにsitemapを更新したことを通知したい時 rake sitemap:refresh:no_ping =&gt; sitemapを作成し、サーチエンジンにsitemapの更新を通知したくない時 rake sitemap:clean =&gt; sitemapを削除したい時</p>
+<p>ransack ransackはrails用の検索機能を実装するためのgem</p>
+<p>以下のgemを追加 gem ‘ransack’ bundle install</p>
+<p>modelのリレーションを追加 user model has_many :comments comment model belongs_to :user</p>
+<p>userモデルからcommentを検索する場合 attr_accessor :comment def execute User.ransack(comments_eq: <span class="citation" data-cites="comment">@comment</span>) end</p>
+<p>検索したいデータをmodelオブジェクトを生成する際に渡してあげる <span class="citation" data-cites="user">@user</span> = User.new(comment) <span class="citation" data-cites="user.execute">@user.execute</span> # データ検索ができる。commentにデータがない場合はall検索となる</p>
+<p>Bootstrap4の導入 Twitter社が開発したフロントエンドのフレームワークで、CSSを書かずにおしゃれでスマホなどの幅の違う画面にも対応したデザインができます。このBootstrapを取り入れる事でフロントエンドの学習効率が飛躍的に上がります。</p>
+<p>gemファイルに以下のコードを追記しましょう。 gem ‘bootstrap’, ‘~&gt; 4.1.1’ gem ‘jquery-rails’</p>
+<p>gemをインストール bundle install</p>
+<p>sprockets-railsが2.3.2以上であることを確認 bundle show |fgrep sprockets-rails</p>
+<p>CSSファイルの拡張子を変更 application.css =&gt; application.scss</p>
+<p>application.scssに以下のコードを追記 <span class="citation" data-cites="import">@import</span> “bootstrap”;</p>
+<p>application.scssの以下のコードを削除 *= require_tree .</p>
+<p>applicaiton.jsに以下のコードを追記 //= require jquery3 //= require popper //= require bootstrap-sprockets</p>
+レスポンシブに対応させるため以下のコードを application.html.erbのheadタグの中に記述
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<p>以下のコードをhtml.erbに記述し、Bootstrapが適用されているか確かめる <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Tooltip on top"> Tooltip on top </button></p>
+<p>activeadmin 管理者画面を簡単に作成するためのGem データの作成、更新、削除を簡単に管理できるようになる このGemを利用することによって、ユーザー用、管理者用という風に１つのアプリケーションの画面を使い分けられるようになる</p>
+<p>以下のgemをGemfileに追記 gem ‘activeadmin’ gem ‘devise’</p>
+<p>gemをインストール bundle install</p>
+<p>activeadminをインストール rails generate active_admin:install</p>
+<p>マイグレートの実行 rake db:migrate</p>
+<p>初期ユーザデータを作成するためシードファイルを実行 rake db:seed ※simple form を使用しているとエラーが出る：次のコマンドで解決：rails rails generate simple_form:install</p>
+<p>サーバを起動 rails server</p>
+<p>以下のURLにアクセス http://localhost:3000/admin</p>
+<p>以下のユーザでアクセス User: admin@example.com Password: password</p>
+<p>モデルを作成（必要な場合） rails generate active_admin:resource user Userが管理画面に追加されていることを確認</p>
+<p>管理画面を日本語化する gemに以下を追加する gem ‘rails-i18n’</p>
+<p>config/localsにja.ymlを追加し、必要に応じて設定したいラベルの日本語を追記する ja: activerecord: models: attributes: user: name: 名前 email: メールアドレス simple_form: labels: user: name: ‘お名前’ age: ‘年齢’ address: ‘住所’ gender: ‘性別’ program: ‘勉強中の言語’ skils: ‘スキル一覧’ curriculum: course: ‘コース名’ hour: ‘学習時間’ price: ‘受講料’</p>
+<p>管理画面の編集、削除フォームを日本語化する config/application.rbに以下の記述を追記 config.i18n.default_locale = :ja config.i18n.load_path += Dir[Rails.root.join(‘config’, ‘locales’, ’**‘,’*.{rb,yml}’).to_s]（locales</p>
+<p>直下にja.ymlを置く場合この記述は必要ない） config/locales/models/ja.ymlを作成し、以下の内容を記述する ja: activerecord: attributes: モデル名: モデルのカラム名: 設定したい値</p>
+<p>ja: activerecord: attributes: doctor: waiting_weeks: 待機週間（数値）</p>
+<p>decorator コントローラから受け取った値に対し、表示形式を整えたり、複雑な処理を行ってviewに表示したい際に使用する</p>
+<p>gemの導入 gem ‘active_decorator’ bundle install</p>
+<p>decorator のファイルを作成 rails g decorator user(model名) app/decorators にあるdecorator を編集</p>
+<p>module UserDecorator def programming_status programming.delete_if(&amp;:empty?).join(“,”) end end</p>
+<p>view でメソッドを呼び出す &lt;%= user.programming_status %&gt;</p>
+<p>gretel 簡単にパンくずリストを作成するためのGem パンくずリストはSEOに効果があると言われています</p>
+<p>gemファイルを編集 gem ‘gretel’</p>
+<p>gemをインストール bundle install</p>
+<p>以下のコマンドを実行し、「config/breadcrumbs.rb」が作成されていることを確認 bundle exec rails generate gretel:install</p>
+<p>「breadcrumbs.rb」を編集し、リストを作成するときの設定を行う crumb :root do link ‘Home’, root_path end</p>
+<p>crumb :users do link ‘ユーザー一覧’, users_path end</p>
+<p>crumb :user do |user| link “@#{user.nickname}”, user_path(user) parent :users end</p>
+<p>「app/views/layouts/application.html.erb」のパンくずリストを表示したい部分に以下のコードを記述 &lt;%= breadcrumbs pretext: “You are here:”, separator: &quot; › &quot; %&gt;</p>
+<p>「app/views/users/index.html.erb」にユーザ一覧表示のパンくずリストを追加（表示したい箇所に記述） &lt;% breadcrumb :users %&gt; 「app/views/users/show.html.erb」にユーザ詳細表示のパンくずリストを追加（表示したい箇所に記述） &lt;% breadcrumb :user, <span class="citation" data-cites="user">@user</span> %&gt;</p>
+<p>carrierwave, rmagick gemをインストール gem ‘carrierwave’ gem ‘rmagick’, require: ‘RMagick’</p>
+<p>gemをインストール(上記以外の場合) gem ‘carrierwave’, :github =&gt; ‘satoruk/carrierwave’ , :ref =&gt; ‘43179f94d6a4e62f69e812f5082d6447c9138480’ gem ‘rmagick’, require: false bundle install</p>
+<p>上記でエラーが出る場合RMagickを6系から7系に切り替える brew unlink imagemagick brew uninstall imagemagick brew install imagemagick@6 brew link imagemagick@6 –force</p>
+<p>マイグレーションファイルの作成 rails g migration AddImageToUser image:text bundle exec rake db:migrate</p>
+<p>アップローダを作成 rails g uploader image</p>
+<p>アップローダファイルの中身を書き換え(uploaders/image_uploader.rb) class ImageUploader &lt; CarrierWave::Uploader::Base include CarrierWave::RMagick storage :file process convert: ‘jpg’ # 保存するディレクトリ名 def store_dir “uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}” end # thumb バージョン(width 400px x height 200px) version :thumb do process :resize_to_fit =&gt; [400, 200] end # 許可する画像の拡張子 def extension_white_list %W[jpg jpeg gif png] end # 変換したファイルのファイル名の規則 def filename “#{Time.zone.now.strftime(‘%Y%m%d%H%M%S’)}.jpg” if original_filename.present? end end</p>
+<p>画像をアップするモデルクラスに以下の記述を追加 mount_uploader :image, ImageUploader</p>
+<p>ファイルをアップロードするフォームを作成（form_for , simple_form_forに記述） &lt;%= f.file_field :image %&gt;</p>
+<p>画像を表示させる記述（form_for , simple_form_forに記述） &lt;%= image_tag user.image_url(:thumb) %&gt;</p>
+<p>spreadsheet（未実装） excelのデータをインポートするGemです。.xlsx, .xlsmは扱えません。excelデータの読み込み、データベースへの大量投入が可能になります。</p>
+<p>gem ‘spreadsheet’</p>
+<p>excel.rbにエンコーディングの設定をする Spreadsheet.client_encoding = “UTF-8”</p>
+<p>エクセルファイルを新規作成して保存するときのexcel.rbの設定 Spreadsheet.client_encoding = “UTF-8” book = Spreadsheet::Workbook.new sheet1 = book.create_worksheet sheet1.name = “test” # 処理書く book.write “/path/excel.xls”</p>
+<p>エクセルファイルを開いて別名で保存</p>
+<p>logger loggerはログを出力するために、Railsにあらかじめ用意されている機能 バグの検出が容易になるので便利</p>
+<p>config.logger = Logger.new(STDOUT) config.logger = Logger.new(‘log/development.log’)</p>
+<p>Logger.new関数では第1引数にログを保存する場所を指定 STDOUTは標準出力にログを出力する場合の引数</p>
+<p>loggerでは、ログにレベルを設定できる</p>
+<p>unknown(常にログとして出力される必要がある未知のメッセージ) fatal(プログラムをクラッシュさせる制御不可能なエラー) error(制御可能なエラー) warn(警告) info(システム管理についての一般的、または役に立つ情報) debug(開発者のための低いレベルの情報)</p>
+<p>出力の優先順位 unknown&gt;fatal&gt;error&gt;warn&gt;info&gt;debug</p>
+<p>ログレベルの設定 config.log_level = :unknown config.log_level = :fatal config.log_level = :error config.log_level = :warn config.log_level = :info config.log_level = :debug</p>
+<p>config.log_level = :warn にするとinfo,debugは出力されなくなる</p>
+<p>ログレベルは以下のファイルで設定できる ・config/application.rb ・config/evironments/development.rb ・config/evironments/production.rb ・config/evironments/test.rb</p>
+<p>上記のファイル以外でログレベルを設定したい場合は以下のコードで可能</p>
+<p>0(debug) 1(info) 2(warn) 3(error) 4(fatal) 5(unknown)</p>
+<p>RailsでのSEO対策 リッチカードの導入 リッチカードを使用すると、テキストよりも視覚に訴える形で検索結果を表示する事ができ、結果としてSEOに強くする事ができます。リッチカードをWebサイトに導入するには、構造化データをHTMLの中に記述する必要があります。</p>
+構造化データの例
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org/",
+  "@type": "Recipe",
+  "name": "Grandma's Holiday Apple Pie",
+  "author": "Elaine Smith",
+  "image": "http://images.edge-generalmills.com/56459281-6fe6-4d9d-984f-385c9488d824.jpg",
+  "description": "A classic apple pie.",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4",
+    "reviewCount": "276",
+    "bestRating": "5",
+    "worstRating": "1"
+  },
+  "prepTime": "PT30M",
+  "totalTime": "PT1H",
+  "recipeYield": "8",
+  "nutrition": {
+    "@type": "NutritionInformation",
+    "servingSize": "1 medium slice",
+    "calories": "230 calories",
+    "fatContent": "1 g",
+    "carbohydrateContent": "43 g",
+  },
+  "recipeIngredient": [
+    "1 box refrigerated pie crusts, softened as directed on box",
+    "6 cups thinly sliced, peeled apples (6 medium)",
+    "..."
+  ],
+  "recipeInstructions": [
+    "1...",
+    "2..."
+   ]
+}
+</script>
+<p>構造化データのサンプル集 こちらのサイトに構造化データのサンプル集があります。0から自分で書く必要はありません。 https://developers.google.com/search/docs/data-types/corporate-contact</p>
+<p>コードを書く場所 構造化データのコードはheadタグの中に記述する。</p>
+<p>Railsへの導入手順 publicの中にrich-cardで表示するための画像を置くディレクトリを作成します。 puclic/rich-card</p>
+<p>rich-cardディレクトリの中にlogoの部分に表示したい画像を配置します logo.png</p>
+構造化データを作成する
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "https://hoge.com/",
+  "logo": "https://hoge.com/rich-card/logo.png"
+}
+</script>
+<p>例外処理 例外が発生してもシステムを止めないようにする</p>
+<p>基本的な書き方 begin   例外が発生する可能性のある処理 rescue   例外発生時に行う処理 end</p>
+<p>意図的に例外を発生させるときはraiseを利用する raise ArgumentError, “#{path.to_s} was not existed”</p>
+<p>例外の種類</p>
+<p>Exception 全ての例外クラスの親クラス StandardError 通常のプログラムで発生する可能性の高い例外クラスをまとめたクラス ArgumentError 引数のあっていない時や、数はあっていても期待される値ではない時 NameError 未定義のローカル変数や定数を使用した時に発生</p>
+<p>例外クラスについてさらに深く知りたいならこちらを参照 https://docs.ruby-lang.org/ja/2.5.0/library/_builtin.html</p>
+<p>組み込みライブラリ このライブラリに組み込まれているクラスやモジュールはrequireを書かなくても使用できる</p>
+<p>現場で利用されているGem一覧 gem ‘dotenv-rails’, groups: [:development, :test]</p>
+<p>gem ‘rails’, ‘~&gt; 5.1.0’ gem ‘puma’ gem ‘bootstrap-sass’ gem ‘sprockets’ gem ‘sprockets-rails’ gem ‘bcrypt’ gem ‘pg’ gem ‘nokogiri’</p>
+<p>group :development, :test do gem ‘rspec-rails’, ‘~&gt; 3.6.1’ gem ‘guard’ gem ‘guard-rspec’ gem ‘spork’, ‘~&gt; 1.0rc’ gem ‘guard-spork’ gem ‘childprocess’ gem ‘rb-readline’ gem ‘bullet’ gem ‘pry-rails’ gem ‘pry-doc’ gem ‘pry-byebug’ gem ‘pry-stack_explorer’ gem ‘rails-controller-testing’ gem ‘timecop’ end</p>
+<p>gem “exception_notification” gem ‘slack-notifier’</p>
+<p>group :test do gem ‘selenium-webdriver’ gem ‘capybara’ gem ‘factory_girl_rails’ gem ‘cucumber-rails’, :require =&gt; false gem ‘minitest’ gem ‘faker’ end</p>
+<h1 id="gem-sass-rails-4.0.2">gem ‘sass-rails’, ‘&gt;=4.0.2’</h1>
+<p>gem ‘uglifier’ gem ‘coffee-rails’ gem ‘jquery-rails’ gem ‘jbuilder’</p>
+<p>group :doc do gem ‘sdoc’, require: false end</p>
+<p>group :production do gem ‘rails_12factor’ end</p>
+<p>gem ‘ransack’ gem ‘devise’ gem ‘devise-i18n’ gem ‘omniauth’ gem ‘omniauth-facebook’ gem ‘omniauth-google-oauth2’</p>
+<p>gem ‘meta-tags’ gem ‘sitemap_generator’</p>
+<p>gem ‘activeadmin’ gem ‘active_admin_import’, github: ‘activeadmin-plugins/active_admin_import’ gem ‘cancancan’</p>
+<p>gem ‘payjp’</p>
+<p>gem ‘activerecord-postgis-adapter’ gem ‘geocoder’</p>
+<p>gem ‘activerecord-session_store’</p>
+<p>gem ‘kaminari’ gem ‘gretel’</p>
+<p>gem ‘httpclient’ gem “httparty” # for image uploader with AWS S3 gem ‘carrierwave’ gem ‘fog’</p>
+<p>group :development, :test, :api do gemspec path: ‘vendor/engines/api’ gemspec path: ‘vendor/engines/staff’ gem “awesome_print” # use ap {Model} in rails console</p>
+<p>gem “letter_opener” gem “letter_opener_web” end</p>
+<h1 id="for-cron-job-scheduler">for cron job scheduler</h1>
+<p>gem ‘whenever’, require: false</p>
+<h1 id="for-bulk-insert">for bulk insert</h1>
+<p>gem ‘activerecord-import’, ‘~&gt; 0.17.0’</p>
+<h1 id="for-get-japanese-holiday">for get japanese holiday</h1>
+<p>gem ‘holiday_jp’</p>
+<h1 id="for-auto-link-in-interview">for auto link in interview</h1>
+<p>gem ‘rails_autolink’</p>
+<h1 id="for-elb-health-check">for elb health check</h1>
+<p>gem ‘health_check’</p>
+<h1 id="for-react">for react</h1>
+<p>gem ‘webpacker’, ‘~&gt; 3.0’ gem ‘react-rails’ gem ‘react-bootstrap-rails’</p>
+<h1 id="for-xls-file-import">for xls file import</h1>
+<p>gem ‘spreadsheet’</p>
+<h1 id="for-font-awesome">for font awesome</h1>
+<p>gem ‘font-awesome-rails’</p>
+<p>gem ‘rack-cors’, :require =&gt; ‘rack/cors’</p>
+<h1 id="for-image-processing">for image processing</h1>
+<p>gem ‘mini_magick’</p>
+<h1 id="for-accessing-aws">for accessing aws</h1>
+<p>gem ‘aws-sdk-dynamodb’</p>
