@@ -1,7 +1,17 @@
 # Elastic Beanstalkとは
 アプリケーションのインフラ周りの設定を自動でやってくれるAWSが提供するサービスです。Webアプリを公開するには、Webサーバ、アプリケーションサーバ、DBサーバを作成し、それらのサービスを連携させる必要があります。また、ロードバランサ(ELB)でリクエストを分散させたり、サーバーを監視(CloudWatch)したり、Auto Scalingによってアプリケーションの負荷を分散させるための仕組みも考えなければいけません。Elastic Beanstalkは、そうしたインフラ周りの設定を自動でやってくれる便利なサービスだというわけです。
 
-## 手順
+# 手順
+これから、`Elastic Beanstalk`を使用してRailsアプリをデプロイするための手順を書いて行きます。
+
+## IAMユーザーの作成
+Elastic Beanstalkを使うには、IAMユーザーを作成する必要があります。AWSマネジメントコンソールから、IAMをクリックし、ユーザーを追加してください。アクセスの種類は、プログラムによるアクセスと、AWS マネジメントコンソールへのアクセスにもチェックしておきます。
+
+グループ名は`test-deploy`とつけます。こちらは、自分の設定したい名前で大丈夫です。なんのアプリ化がわかりやすいような名前をつけるといいでしょう。ポリシーフィルターはAWSElasticBeanstalkFullAccessにします。
+
+ユーザーの作成を行うと`Access Key ID`や`Secret Access Key`が表示されます。この情報はとても大切なのできちんと保管しておいてください。外部に漏れた場合はすぐにユーザーを削除しましょう。
+
+## aws cliのインストール
 ebコマンドを使えるようにするため、`homebrew`を利用して`awsebcli`をインストールします。
 
 ```
@@ -20,46 +30,36 @@ eb --version
 EB CLI 3.2.2 (Python 3.4.3)
 ```
 
-### IAMユーザーの作成
-Elastic Beanstalkを使うには、IAMユーザーを作成する必要があります。AWSマネジメントコンソールから、IAMをクリックし、ユーザーを追加してください。アクセスの種類は、プログラムによるアクセスと、AWS マネジメントコンソールへのアクセスにもチェックしておきます。
-
-グループ名は`test-deploy`とつけます。こちらは、自分の設定したい名前で大丈夫です。なんのアプリ化がわかりやすいような名前をつけるといいでしょう。ポリシーフィルターはAWSElasticBeanstalkFullAccessにします。
-
-ユーザーの作成を行うと`Access Key ID`や`Secret Access Key`が表示されます。この情報はとても大切なのできちんと保管しておいてください。外部に漏れた場合はすぐにユーザーを削除しましょう。
-
-## aws cliのインストール
-
-
 ## `Access Key ID`や`Secret Access Key`の設定
 作成したIAMユーザーで操作するためにAccess Key IDとSecret Access Keyの設定を行います。
 `aws configure`と打つと、対話形式で聞いてくるのでIAMユーザー作成の際に表示されたAccess Key IDとSecret Access Keyを入力します。Default region nameはap-northeast-1、Default output formatはjsonあたりを指定しておけば良いかと思います。
+
+```
 $ aws configure
 AWS Access Key ID [None]: *********
 AWS Secret Access Key [None]: **********************
 Default region name [None]: ap-northeast-1
 Default output format [None]: json
-設定した値は
+```
+
+設定した値は以下のコマンドで確認できます。
+
+```
 $ cat ~/.aws/config
 $ cat ~/.aws/credentials
-で確認できます。
-なお、profile名を指定したい場合は、aws configure --profile your-profile-nameとします。
+```
 
-Elastic Beanstalkのセットアップ
-まず、ebコマンドをインストールします。homebrewでインストールします。（詳細）
-$ brew install awsebcli
-$ eb --version
-EB CLI 3.9.0 (Python 2.7.1)
-eb initコマンドで初期化します。
-対象となるリポジトリで作業して下さい。
-こちらも対話形式で聞いてきますので、以下に私の場合の例を載せます。#以下はコメントになります。
+## Elastic Beanstalkのセットアップ
+eb initコマンドで初期化します。対象となるリポジトリで作業して下さい。こちらも対話形式で聞いてきますので、以下に私の場合の例を載せます。#以下はコメントになります。
+
+```
 $ eb init
+```
+
+```
 Select a default region
 1) us-east-1 : US East (N. Virginia)
-・・・(中略)
-9) ap-northeast-1 : Asia Pacific (Tokyo)
-・・・(中略)
-15) eu-west-2 : EU (London)
-(default is 3): 9
+.....
 
 Enter Application Name
 (default is "sample-app"): sample-app　# デフォルトはリポジトリ名になると思われる
@@ -75,11 +75,16 @@ Select a platform version.
 (default is 1): 1 # バージョンは各アプリで違うと思うのでお好みで。
 Do you want to set up SSH for your instances?
 (y/n): y
+```
 
+```
 Select a keypair.
-1) sample-app
+1) my_account
 2) [ Create new KeyPair ]
-(default is 2): 1 # すでにあるkeypairを使う場合はそれを選択。keypairがない場合や新たなkeypairを使用する場合は、[ Create new KeyPair ]の番号を選ぶ。
+(default is 2): 1
+```
+
+ # すでにあるkeypairを使う場合はそれを選択。keypairがない場合や新たなkeypairを使用する場合は、[ Create new KeyPair ]の番号を選ぶ。
 設定はcat .elasticbeanstalk/config.ymlで確認できます。
 $ cat .elasticbeanstalk/config.yml
 このあたりで、.gitignoreにElastic Beanstalk用のファイルは無視する設定が追加されるかと思います。リポジトリの.gitignoreで管理したい場合は、commitしておきましょう。
@@ -294,12 +299,16 @@ eb printenv environment-name
 環境変数をセットする時
 eb setenv PGHOST=xxxxxxxxx -e envorinment-name
 EC2にsshする時
+
+```
 eb ssh envorinment-name
 cd /var/app/current/ # Rails.rootへ。
 bin/rails console # Rails consoleを起動。
-# 上記コマンドでlog/*.logにアクセス権限がないと言われてしまう場合chmodで権限を変更するか、rootユーザーになって行う。
-sudo su # rootユーザになる
+```
+
+上記コマンドで`log/*.log`にアクセス権限がないと言われてしまう場合chmodで権限を変更するか、rootユーザーになって行う。
+
+```
+sudo su
 bin/rails console
-最後に
-Elastic Beanstalkをやる前に、自分でELBを用意し、EC2インスタンスを作成し、nginxを立て、unicornの設定をし・・・といった作業をして環境を構築していました。Elastic Beanstalkはこのあたりを鮮やかにブラックボックス化してくれているという印象を受けました。インフラ力を高めたい場合には、こうした便利ツールを使わずに、自分の手で一つ一つやっていったほうが良いと思います。（オンプレ世代からみると、AWSもかなりの便利ツールではありますが・・・。）
-情報には万全を期していますが、一通り作業をした後メモを元に書いているので、抜け漏れがあるかと思います。コメントや編集などでやさしくご指摘いただけますと幸いです。
+```
