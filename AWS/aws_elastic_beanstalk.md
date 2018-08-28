@@ -96,7 +96,11 @@ git commit -m "add elastic beanstalk files to .gitignore"
 今すぐ作成しましょう。と書いてあるので作成しましょう。
 eb createで作成します。こちらも対話形式で設定が可能です。
 まず触ってみるだけならば、defaultのままで大丈夫かと思います。タイプしなくてもEnterで可能です。
+
+```
 $ eb create
+```
+
 Enter Environment Name
 (default is sample-app-dev): sample-app-dev
 Enter DNS CNAME prefix
@@ -109,13 +113,26 @@ Select a load balancer type
 しばらく時間がかかるので、みかんでも食べて(冬場の場合)しばしお待ちください。コマンドラインにあるように(safe to Ctrl+C)なのでCtrl+Cしても大丈夫です。経過はマネジメントコンソールから確認できます。
 RDSの作成
 しばらく待っていると、おそらく失敗すると思います。こういう場合は基本中の基本、ログを見ます。
+
+```
 error.png
+```
+
 eb logsコマンドでログが見れます。eb logsコマンドを実行すると/var/log/nginx/error.logなど、複数のログが表示されます。今回のログはElastic Beanstalkに関するログなので、/var/log/eb-activity.logのとこ ろを見ます。
+
+```
 $ eb logs
+```
+
 # lessで表示される。
+
+```
 -------------------------------------
 /var/log/eb-activity.log
 -------------------------------------
+```
+
+```
   ++ /opt/elasticbeanstalk/bin/get-config container -k app_user
   + EB_APP_USER=webapp
   ・・・(中略)
@@ -124,16 +141,13 @@ $ eb logs
   PG::ConnectionBad: could not connect to server: No such file or directory
         Is the server running locally and accepting
         connections on Unix domain socket "/var/run/postgresql/.s.PGSQL.5432"?
-db:migrateができないよと言っているわけです。この辺りは、Railsのconfig/database.ymlにどのように書かれているかにもよるのですが、defaultでlocalhostが指定されていてそれをproductionにも<<: *defaultのまま指定してあったりすると当然Elastic Beanstalkで作成されたEC2上にはデータベースサーバはありませんので、接続できないというわけです。
-これまで見てきた方法では、環境変数に本番環境のデータベースの情報を入れておいて、config/database.ymlでhost: <%= ENV['DB_HOSTNAME'] %>のようにしてある形も多かったです。そのような場合ですでにデータベースが作成されている場合は、Elastic Benastalkで作成したEC2からそのデータベースサーバに接続できるようにセキュリティーグループを設定してあげる必要があります。
-今回の場合は新たにRDSを作成し、そこに接続するようにします。
-Elastic BeanstalkではRDSは作成してくれませんので、自分で作成します。
-Elastic Beanstalkの該当のアプリケーションのダッシュボードへ行き、左側にある設定をクリック。下の方にあるデータ層というところから、新しい RDS データベースを作成します。 data-layer.png
-（画像は一部省略してあります)
-作成するDBはお好みでいいのですが、無料枠だけでおさめたい場合はインスタンスクラスはdb.t2.microにしておく必要があるのでご注意ください。 create-db.png
-(画像は私の場合)
+```
+
+db:migrateができないよと言っているわけです。この辺りは、Railsのconfig/database.ymlにどのように書かれているかにもよるのですが、defaultでlocalhostが指定されていてそれをproductionにも`<<: *default`のまま指定してあったりすると当然Elastic Beanstalkで作成されたEC2上にはデータベースサーバはありませんので、接続できないというわけです。
+
 RDSを作成すると、エンドポイントなどが表示されると思います。また、マネジメントコンソールのRDSからも作成されているのが確認できるかと思います。そこでもエンドポイントやポートなどを確認できるかと思います。
 RDSへの接続は、AWSのDocumentにもあるように、config/database.ymlに設定しておかなければいけません。
+```
 default: &default
   adapter: postgresql
   encoding: unicode
@@ -145,10 +159,40 @@ production:
   password: <%= ENV['RDS_PASSWORD'] %>
   host: <%= ENV['RDS_HOSTNAME'] %>
   port: <%= ENV['RDS_PORT'] %>
-そして環境変数は、eb setenvコマンドで行います。
-eb setenv RDS_DB_NAME=ebdb RDS_USERNAME=*********** RDS_PASSWORD=*********** RDS_HOSTNAME=***********.rds.amazonaws.com RDS_PORT=****
+```
+
+
+
+## 環境変数の設定
+環境変数の設定は、eb setenvコマンドで行います。
+
+```
+eb setenv RDS_DB_NAME=ebdb RDS_USERNAME=hogehoge RDS_PASSWORD=hogehoge RDS_HOSTNAME=hogehoge.rds.amazonaws.com RDS_PORT=hogehoge
+```
+
+設定する項目
+
+- AWS_ACCESS_KEY_ID
+- AWS_REGION
+- AWS_SECRET_ACCESS_KEY
+- BUNDLE_WITHOUT
+- RACK_ENV
+- RAILS_SKIP_ASSET_COMPILATION
+- RAILS_SKIP_MIGRATIONS
+- RDS_DB_NAME
+- RDS_HOSTNAME
+- RDS_PASSWORD
+- RDS_PORT
+- RDS_USERNAME
+- SECRET_KEY_BASE
+
+
 設定されている環境変数は、eb printenvコマンドで確認できます。
+
+```
 $ eb printenv
+```
+
  Environment Variables:
      RDS_PORT = ****
      SECRET_KEY_BASE = ***************

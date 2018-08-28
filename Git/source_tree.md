@@ -1,5 +1,8 @@
+# SourceTree
+Gitをより操作しやすくしたもの（本来はコマンドだけで操作するが見た目で操作できるようになる）
 
-SourceTreeをダウンロード
+[SourceTree](http://downloads.atlassian.com/software/sourcetree/SourceTree_2.1.dmg)
+
 
 インストーラーに従ってインストール
 

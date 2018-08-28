@@ -32,7 +32,8 @@ git pull rails_curriculum master
 2. [Linuxコマンド](https://github.com/yoshitokamizato/rails_curriculum/blob/master/linux_command.md)
 
 ## Ruby（基礎文法）
-
+1.
 
 ## Ruby on Rails（フレームワーク）
 1. [Ruby on Railsの環境構築](https://github.com/yoshitokamizato/rails_curriculum/blob/master/rails_environment.md)
+2. [Ruby on Rails で Hello World!!](#)
